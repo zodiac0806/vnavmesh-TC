@@ -74,9 +74,11 @@ public class MainWindow : Window, IDisposable
 				using (var tab = ImRaii.TabItem("Layout"))
 					if (tab)
 						_debugLayout.Draw();
-				using (var tab = ImRaii.TabItem("Collision"))
-					if (tab)
-						_debugGameColl.Draw();
+				// "Collision" tab intentionally removed: DebugGameCollision.Draw()/GatherInfo() walk
+				// raw FFXIVClientStructs pointers without null/validity guards and can crash the
+				// whole game process (AccessViolationException) on certain object/collision states.
+				// _debugGameColl itself is kept alive since other debug tabs (e.g. Layout's DrawPath)
+				// still use its safe methods - only this crash-prone entry point is hidden.
 				using (var tab = ImRaii.TabItem("Navmesh manager"))
 					if (tab)
 						_debugNavmeshManager.Draw();

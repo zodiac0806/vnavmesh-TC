@@ -64,6 +64,17 @@ public class FollowPath : IDisposable
 		if (player == null)
 			return;
 
+		if (Service.Condition[ConditionFlag.Unconscious])
+		{
+			// Don't drive movement/camera or (critically) ExecuteJump() below while KO'd.
+			// ExecuteJump() calls straight into native ActionManager::UseAction, which is not
+			// guarded by OverrideMovement's own Unconscious checks (those only cover the
+			// RMIWalk/RMIFly input hooks) and can crash the game if invoked on a dead character.
+			// Waypoints are left untouched so pathing resumes on its own once revived.
+			_movement.Enabled = _camera.Enabled = false;
+			return;
+		}
+
 		while (Waypoints.Count > 0)
 		{
 			var (a, iid) = Waypoints[0];

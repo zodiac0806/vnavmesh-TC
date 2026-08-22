@@ -88,6 +88,13 @@ public unsafe class OverrideMovement : IDisposable
     private void RMIWalkDetour(void* self, float* sumLeft, float* sumForward, float* sumTurnLeft, byte* haveBackwardOrStrafe, byte* a6, byte bAdditiveUnk)
     {
         _rmiWalkHook.Original(self, sumLeft, sumForward, sumTurnLeft, haveBackwardOrStrafe, a6, bAdditiveUnk);
+        if (Service.Condition[Dalamud.Game.ClientState.Conditions.ConditionFlag.Unconscious])
+        {
+            // avoid touching movement state (and the native IsInputEnabled calls below) while the
+            // player is KO'd - on some client builds this reliably crashes the game
+            UserInput = false;
+            return;
+        }
         // TODO: we really need to introduce some extra checks that PlayerMoveController::readInput does - sometimes it skips reading input, and returning something non-zero breaks stuff...
         bool movementAllowed = bAdditiveUnk == 0 && _rmiWalkIsInputEnabled1(self) && _rmiWalkIsInputEnabled2(self); //&& !Service.Condition[Dalamud.Game.ClientState.Conditions.ConditionFlag.BeingMoved];
         UserInput = *sumLeft != 0 || *sumForward != 0;
@@ -102,6 +109,11 @@ public unsafe class OverrideMovement : IDisposable
     private void RMIFlyDetour(void* self, PlayerMoveControllerFlyInput* result)
     {
         _rmiFlyHook.Original(self, result);
+        if (Service.Condition[Dalamud.Game.ClientState.Conditions.ConditionFlag.Unconscious])
+        {
+            UserInput = false;
+            return;
+        }
         UserInput = result->Forward != 0 || result->Left != 0 || result->Up != 0;
         // TODO: we really need to introduce some extra checks that PlayerMoveController::readInput does - sometimes it skips reading input, and returning something non-zero breaks stuff...
         if ((IgnoreUserInput || result->Forward == 0 && result->Left == 0 && result->Up == 0) && DirectionToDestination(true) is var relDir && relDir != null)

@@ -74,14 +74,14 @@ public unsafe class DebugGameCollision : IDisposable
 		if (_raycastHook != null)
 		{
 			bool hook = _raycastHook.IsEnabled;
-			if (ImGui.Checkbox("Log raycasts", ref hook))
+			if (ImGui.Checkbox(Loc.T("Log raycasts"), ref hook))
 				if (hook)
 					_raycastHook.Enable();
 				else
 					_raycastHook.Disable();
 		}
 
-		if (_savedHit != null && ImGui.Button("Reset remembered raycast hit"))
+		if (_savedHit != null && ImGui.Button(Loc.T("Reset remembered raycast hit")))
 			_savedHit = null;
 
 		var module = Framework.Instance()->BGCollisionModule;
@@ -140,11 +140,18 @@ public unsafe class DebugGameCollision : IDisposable
 					var cast = (ColliderStreamedEx*)coll;
 					if (cast->Header != null && cast->Elements != null)
 					{
-						for (int i = 0; i < cast->Header->NumMeshes; ++i)
+						try
 						{
-							var m = cast->Elements[i].Mesh;
-							if (m != null)
-								_streamedMeshes.Add((nint)m);
+							for (int i = 0; i < cast->Header->NumMeshes; ++i)
+							{
+								var m = cast->Elements[i].Mesh;
+								if (m != null)
+									_streamedMeshes.Add((nint)m);
+							}
+						}
+						catch (NullReferenceException)
+						{
+							// streamed collider data can be unloaded by the game's own streaming system between the null check above and this loop
 						}
 					}
 				}
@@ -182,7 +189,7 @@ public unsafe class DebugGameCollision : IDisposable
 		if (!n.Opened)
 			return;
 
-		ImGui.Checkbox("Show objects with zero layer", ref _showZeroLayer);
+		ImGui.Checkbox(Loc.T("Show objects with zero layer"), ref _showZeroLayer);
 		{
 			var shownLayers = _availableLayers & _shownLayers;
 			using var layers = ImRaii.Combo("Shown layers", shownLayers == _availableLayers ? "All" : shownLayers.None() ? "None" : string.Join(", ", shownLayers.SetBits()));
@@ -229,8 +236,8 @@ public unsafe class DebugGameCollision : IDisposable
 			using var flags = ImRaii.Combo("Flag filter", _showOnlyFlagRaycast ? _showOnlyFlagVisit ? "Only when both flags are set" : "Only if raycast flag is set" : _showOnlyFlagVisit ? "Only if global visit flag is set" : "Show everything");
 			if (flags)
 			{
-				ImGui.Checkbox("Hide objects without raycast flag (0x1)", ref _showOnlyFlagRaycast);
-				ImGui.Checkbox("Hide objects without global viist flag (0x2)", ref _showOnlyFlagVisit);
+				ImGui.Checkbox(Loc.T("Hide objects without raycast flag (0x1)"), ref _showOnlyFlagRaycast);
+				ImGui.Checkbox(Loc.T("Hide objects without global viist flag (0x2)"), ref _showOnlyFlagVisit);
 			}
 		}
 	}
@@ -465,7 +472,7 @@ public unsafe class DebugGameCollision : IDisposable
 	private void DrawColliderMesh(ColliderMesh* coll)
 	{
 		DrawResource(coll->Resource);
-		if (ImGui.Button("Copy translation to clipboard"))
+		if (ImGui.Button(Loc.T("Copy translation to clipboard")))
 		{
 			var t = coll->Translation;
 			var r = coll->Rotation;
@@ -558,10 +565,17 @@ public unsafe class DebugGameCollision : IDisposable
 					var cast = (ColliderStreamedEx*)coll;
 					if (cast->Header != null && cast->Elements != null)
 					{
-						for (int i = 0; i < cast->Header->NumMeshes; ++i)
+						try
 						{
-							var elem = cast->Elements + i;
-							VisualizeColliderMesh(elem->Mesh, new(0, 1, 0, 0.7f), _materialId, _materialMask);
+							for (int i = 0; i < cast->Header->NumMeshes; ++i)
+							{
+								var elem = cast->Elements + i;
+								VisualizeColliderMesh(elem->Mesh, new(0, 1, 0, 0.7f), _materialId, _materialMask);
+							}
+						}
+						catch (NullReferenceException)
+						{
+							// streamed collider data can be unloaded by the game's own streaming system mid-iteration
 						}
 					}
 				}
@@ -759,11 +773,11 @@ public unsafe class DebugGameCollision : IDisposable
 		}
 
 		var raycast = (coll->VisibilityFlags & 1) != 0;
-		if (ImGui.Checkbox("Flag: raycast", ref raycast))
+		if (ImGui.Checkbox(Loc.T("Flag: raycast"), ref raycast))
 			coll->VisibilityFlags ^= 1;
 
 		var globalVisit = (coll->VisibilityFlags & 2) != 0;
-		if (ImGui.Checkbox("Flag: global visit", ref globalVisit))
+		if (ImGui.Checkbox(Loc.T("Flag: global visit"), ref globalVisit))
 			coll->VisibilityFlags ^= 2;
 	}
 

@@ -624,10 +624,10 @@ public unsafe class DebugLayout : IDisposable
 
 		FillInstancesFromGame(layout);
 
-		ImGui.Checkbox("Group by layer group", ref _groupByLayerGroup);
-		ImGui.Checkbox("Group by layer", ref _groupByLayer);
-		ImGui.Checkbox("Group by instance type", ref _groupByInstanceType);
-		ImGui.Checkbox("Group by material", ref _groupByMaterial);
+		ImGui.Checkbox(Loc.T("Group by layer group"), ref _groupByLayerGroup);
+		ImGui.Checkbox(Loc.T("Group by layer"), ref _groupByLayer);
+		ImGui.Checkbox(Loc.T("Group by instance type"), ref _groupByInstanceType);
+		ImGui.Checkbox(Loc.T("Group by material"), ref _groupByMaterial);
 		ImGui.InputText("Filter by ID", ref _filterById, 255);
 		DrawInstancesByLayerGroup(_insts.Values);
 	}

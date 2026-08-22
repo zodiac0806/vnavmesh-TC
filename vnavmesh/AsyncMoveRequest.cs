@@ -63,8 +63,16 @@ public class AsyncMoveRequest : IDisposable
 	{
 		if (_pendingTask != null)
 		{
-			Service.Log.Error($"Pathfinding task is in progress...");
-			return false;
+			// A new request supersedes any still-in-flight one instead of being rejected outright.
+			// External callers driving vnavmesh via IPC (e.g. other automation plugins) don't all
+			// check TaskInProgress before calling MoveTo, and even ones that do can still race
+			// against Update() completing the previous task between frames. Rejecting the new
+			// destination in that case reads to the caller as movement silently failing/stalling.
+			// Let the stale task finish and dispose itself in the background; its result is simply
+			// discarded since nothing will reference it once _pendingTask is reassigned below.
+			var stale = _pendingTask;
+			stale.ContinueWith(t => { try { t.Dispose(); } catch { } });
+			Service.Log.Debug("Superseding in-progress pathfinding task with a new request.");
 		}
 
 		var toleranceStr = range > 0 ? $" within {range}y" : "";

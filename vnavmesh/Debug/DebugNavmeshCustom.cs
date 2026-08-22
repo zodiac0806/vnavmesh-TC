@@ -202,21 +202,21 @@ class DebugNavmeshCustom : IDisposable
 		{
 			if (nsettings.Opened)
 			{
-				ImGui.Checkbox("Support flying", ref _settings.Flyable);
-				ImGui.Checkbox("Load existing territory customization", ref _settings.LoadExisting);
+				ImGui.Checkbox(Loc.T("Support flying"), ref _settings.Flyable);
+				ImGui.Checkbox(Loc.T("Load existing territory customization"), ref _settings.LoadExisting);
 				_settings.Settings.Draw();
 			}
 		}
 
 		using (var d = ImRaii.Disabled(_navmesh.CurrentState == AsyncBuilder.State.InProgress))
 		{
-			if (ImGui.Button("Rebuild navmesh"))
+			if (ImGui.Button(Loc.T("Rebuild navmesh")))
 			{
 				Clear();
 				_navmesh.Rebuild(_settings, true);
 			}
 			ImGui.SameLine();
-			if (ImGui.Button("Rebuild scene extract only"))
+			if (ImGui.Button(Loc.T("Rebuild scene extract only")))
 			{
 				Clear();
 				_navmesh.Rebuild(_settings, false);
@@ -231,7 +231,7 @@ class DebugNavmeshCustom : IDisposable
 		ImGui.InputFloat("X", ref _dest.X);
 		ImGui.InputFloat("Y", ref _dest.Y);
 		ImGui.InputFloat("Z", ref _dest.Z);
-		if (ImGui.Button("Pathfind"))
+		if (ImGui.Button(Loc.T("Pathfind")))
 		{
 			var player = Service.ObjectTable.LocalPlayer;
 			var playerPos = player?.Position ?? default;

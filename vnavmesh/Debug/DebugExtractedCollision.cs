@@ -134,7 +134,7 @@ public class DebugExtractedCollision : IDisposable
 
         ImGui.InputText("Filter", ref _meshFilter);
 
-        if (ImGui.Button("Export to DotRecast obj file"))
+        if (ImGui.Button(Loc.T("Export to DotRecast obj file")))
             ExportMesh();
 
         int meshIndex = 0;

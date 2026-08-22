@@ -49,10 +49,10 @@ class DebugNavmeshManager : IDisposable
 		else
 		{
 			ImGui.SetNextItemWidth(100);
-			if (ImGui.Button("Reload"))
+			if (ImGui.Button(Loc.T("Reload")))
 				_manager.Reload(true);
 			ImGui.SameLine();
-			if (ImGui.Button("Rebuild"))
+			if (ImGui.Button(Loc.T("Rebuild")))
 				_manager.Reload(false);
 		}
 		ImGui.SameLine();
@@ -65,27 +65,27 @@ class DebugNavmeshManager : IDisposable
 		var player = Service.ObjectTable.LocalPlayer;
 		var playerPos = player?.Position ?? default;
 		ImGui.TextUnformatted($"Player pos: {playerPos}");
-		if (ImGui.Button("Set target to current pos"))
+		if (ImGui.Button(Loc.T("Set target to current pos")))
 			_target = player?.Position ?? default;
 		ImGui.SameLine();
-		if (ImGui.Button("Set target to target pos"))
+		if (ImGui.Button(Loc.T("Set target to target pos")))
 			_target = player?.TargetObject?.Position ?? default;
 		ImGui.SameLine();
-		if (ImGui.Button("Set target to flag position"))
+		if (ImGui.Button(Loc.T("Set target to flag position")))
 			_target = MapUtils.FlagToPoint(_manager.Query) ?? default;
 		ImGui.SameLine();
 		ImGui.TextUnformatted($"Current target: {_target}");
 
-		if (ImGui.Button("Export bitmap"))
+		if (ImGui.Button(Loc.T("Export bitmap")))
 			ExportBitmap(_manager.Navmesh, _manager.Query, playerPos);
 
-		ImGui.Checkbox("Allow movement", ref _path.MovementAllowed);
-		ImGui.Checkbox("Use raycasts", ref _manager.UseRaycasts);
-		ImGui.Checkbox("Use string pulling", ref _manager.UseStringPulling);
-		if (ImGui.Button("Pathfind to target using navmesh"))
+		ImGui.Checkbox(Loc.T("Allow movement"), ref _path.MovementAllowed);
+		ImGui.Checkbox(Loc.T("Use raycasts"), ref _manager.UseRaycasts);
+		ImGui.Checkbox(Loc.T("Use string pulling"), ref _manager.UseStringPulling);
+		if (ImGui.Button(Loc.T("Pathfind to target using navmesh")))
 			_asyncMove.MoveTo(_target, false);
 		ImGui.SameLine();
-		if (ImGui.Button("Pathfind to target using volume"))
+		if (ImGui.Button(Loc.T("Pathfind to target using volume")))
 			_asyncMove.MoveTo(_target, true);
 
 		DrawPosition("Player", playerPos);

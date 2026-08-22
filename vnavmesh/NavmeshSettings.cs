@@ -53,7 +53,7 @@ public class NavmeshSettings
 
     public void Draw()
     {
-        DrawConfigFloat(ref CellSize, 0.1f, 1.0f, 0.01f, "Rasterization: Cell Size (#cs)", """
+        DrawConfigFloat(ref CellSize, 0.1f, 1.0f, 0.01f, Loc.T("Rasterization: Cell Size (#cs)"), """
             The xz-plane cell size to use for fields. [Limit: > 0] [Units: world]
 
             The voxelization cell size #cs defines the voxel size along both axes of
@@ -79,7 +79,7 @@ public class NavmeshSettings
             The minimum value for this parameter depends on the platform's floating point
             accuracy, with the practical minimum usually around 0.05.
             """);
-        DrawConfigFloat(ref CellHeight, 0.1f, 1.0f, 0.01f, "Rasterization: Cell Height (#ch)", """
+        DrawConfigFloat(ref CellHeight, 0.1f, 1.0f, 0.01f, Loc.T("Rasterization: Cell Height (#ch)"), """
             The y-axis cell size to use for fields. [Limit: > 0] [Units: world]
 
             The voxelization cell height #ch is defined separately in order to allow for
@@ -96,7 +96,7 @@ public class NavmeshSettings
             The minimum value for this parameter depends on the platform's floating point
             accuracy, with the practical minimum usually around 0.05.
             """);
-        DrawConfigFloat(ref AgentHeight, 0.1f, 5.0f, 0.1f, "Agent: Height", """
+        DrawConfigFloat(ref AgentHeight, 0.1f, 5.0f, 0.1f, Loc.T("Agent: Height"), """
             Minimum floor to 'ceiling' height that will still allow the floor area to be considered walkable. [Limit: >= 3 * CellHeight] [Units: world]
 
             This value defines the worldspace height `h` of the agent in voxels. The value
@@ -106,7 +106,7 @@ public class NavmeshSettings
             Permits detection of overhangs in the source geometry that make the geometry
             below un-walkable. The value is usually set to the maximum agent height.
             """);
-        DrawConfigFloat(ref AgentRadius, 0.0f, 5.0f, 0.1f, "Agent: Radius", """
+        DrawConfigFloat(ref AgentRadius, 0.0f, 5.0f, 0.1f, Loc.T("Agent: Radius"), """
             The distance to erode/shrink the walkable area of the heightfield away from obstructions. [Limit: >= 0] [Units: world]
 
             The parameter #walkableRadius defines the worldspace agent radius `r` in voxels.
@@ -133,7 +133,7 @@ public class NavmeshSettings
             edges, and odd edge cases issues in the mesh generation can potentially occur.  For
             these reasons, specifying a radius of zero is allowed but is not recommended.
             """);
-        DrawConfigFloat(ref AgentMaxClimb, 0.1f, 5.0f, 0.1f, "Agent: Max Climb", """
+        DrawConfigFloat(ref AgentMaxClimb, 0.1f, 5.0f, 0.1f, Loc.T("Agent: Max Climb"), """
             Maximum ledge height that is considered to still be traversable. [Limit: >= 0] [Units: world]
 
             The #walkableClimb value defines the maximum height of ledges and steps that
@@ -144,7 +144,7 @@ public class NavmeshSettings
             Allows the mesh to flow over low lying obstructions such as curbs and
             up/down stairways. The value is usually set to how far up/down an agent can step.
             """);
-        DrawConfigFloat(ref AgentMaxSlopeDeg, 0.0f, 90.0f, 1.0f, "Agent: Max Slope", """
+        DrawConfigFloat(ref AgentMaxSlopeDeg, 0.0f, 90.0f, 1.0f, Loc.T("Agent: Max Slope"), """
             The maximum slope that is considered walkable. [Limits: 0 <= value < 90] [Units: Degrees]
 
             The parameter #walkableSlopeAngle is to filter out areas of the world where
@@ -155,10 +155,10 @@ public class NavmeshSettings
 
             The practical upper limit for this parameter is usually around 85 degrees.
             """);
-        DrawConfigFilteringCombo(ref Filtering, "Filtering", """
+        DrawConfigFilteringCombo(ref Filtering, Loc.T("Filtering"), """
             Select which filtering passes to apply to voxelized geometry to remove some classes of artifacts.
             """);
-        DrawConfigFloat(ref RegionMinSize, 0.0f, 150.0f, 1.0f, "Region: Min Size", """
+        DrawConfigFloat(ref RegionMinSize, 0.0f, 150.0f, 1.0f, Loc.T("Region: Min Size"), """
             The minimum number of cells allowed to form isolated island areas. [Limit: >= 0] [Units: voxels]
 
             Watershed partitioning is really prone to noise in the input distance field.
@@ -172,7 +172,7 @@ public class NavmeshSettings
             This is useful in removing useless regions that can sometimes form on
             geometry such as table tops, box tops, etc.
             """);
-        DrawConfigFloat(ref RegionMergeSize, 0.0f, 150.0f, 1.0f, "Region: Merge Size", """
+        DrawConfigFloat(ref RegionMergeSize, 0.0f, 150.0f, 1.0f, Loc.T("Region: Merge Size"), """
             Any regions with a span count smaller than this value will, if possible, be merged with larger regions. [Limit: >=0] [Units: voxels]
 
             The triangulation process works best with small, localized voxel regions.
@@ -180,10 +180,10 @@ public class NavmeshSettings
             that is allowed to be merged with another region.  If you see small patches
             missing here and there, you could lower the #minRegionArea value.
             """);
-        DrawConfigPartitioningCombo(ref Partitioning, "Partitioning algorithm", """
+        DrawConfigPartitioningCombo(ref Partitioning, Loc.T("Partitioning algorithm"), """
             There are 3 martitioning methods, each with some pros and cons.
             """);
-        DrawConfigFloat(ref PolyMaxEdgeLen, 0.0f, 50.0f, 1.0f, "Polygonization: Max Edge Length", """
+        DrawConfigFloat(ref PolyMaxEdgeLen, 0.0f, 50.0f, 1.0f, Loc.T("Polygonization: Max Edge Length"), """
             The maximum allowed length for contour edges along the border of the mesh. [Limit: >= 0] [Units: world]
 
             In certain cases, long outer edges may decrease the quality of the resulting
@@ -200,7 +200,7 @@ public class NavmeshSettings
             Extra vertices will be inserted as needed to keep contour edges below this
             length. A value of zero effectively disables this feature.
             """);
-        DrawConfigFloat(ref PolyMaxSimplificationError, 0.1f, 3.0f, 0.1f, "Polygonization: Max Edge Simplification Error", """
+        DrawConfigFloat(ref PolyMaxSimplificationError, 0.1f, 3.0f, 0.1f, Loc.T("Polygonization: Max Edge Simplification Error"), """
             The maximum distance a simplfied contour's border edges should deviate from the original raw contour. [Limit: >=0] [Units: voxels]
 
             When the rasterized areas are converted back to a vectorized representation,
@@ -216,43 +216,43 @@ public class NavmeshSettings
 
             The effect of this parameter only applies to the xz-plane.
             """);
-        DrawConfigInt(ref PolyMaxVerts, 3, 12, 1, "Polygonization: Max Vertices per Polygon", """
+        DrawConfigInt(ref PolyMaxVerts, 3, 12, 1, Loc.T("Polygonization: Max Vertices per Polygon"), """
             The maximum number of vertices allowed for polygons generated during the contour to polygon conversion process. [Limit: >= 3]
 
             If the mesh data is to be used to construct a Detour navigation mesh, then the upper limit
             is limited to <= #DT_VERTS_PER_POLYGON.
             """); // TODO: fix the limit to make it always suitable for detour
-        DrawConfigFloat(ref DetailSampleDist, 0.0f, 16.0f, 1.0f, "Detail Mesh: Sample Distance", """
+        DrawConfigFloat(ref DetailSampleDist, 0.0f, 16.0f, 1.0f, Loc.T("Detail Mesh: Sample Distance"), """
             Sampling distance to use when generating the detail mesh. [Limits: 0 or >= 0.9] [Units: voxels]
             """); // TODO: verify that it's actually in voxels
-        DrawConfigFloat(ref DetailMaxSampleError, 0.0f, 16.0f, 1.0f, "Detail Mesh: Max Sample Error", """
+        DrawConfigFloat(ref DetailMaxSampleError, 0.0f, 16.0f, 1.0f, Loc.T("Detail Mesh: Max Sample Error"), """
             The maximum distance the detail mesh surface should deviate from heightfield data. (For height detail only.) [Limit: >= 0] [Units: world]
             """); // TODO: verify that it's actually in voxels
-        DrawConfigInt(ref NumTiles[0], 1, 32, 1, "L1 Tile count", """
+        DrawConfigInt(ref NumTiles[0], 1, 32, 1, Loc.T("L1 Tile count"), """
             Number of tiles per axis for first-level subdivision. Has to be power-of-2. [Limit: 1 <= value <= 32]
             Affects both navmesh and nav volume.
             """);
-        DrawConfigInt(ref NumTiles[1], 1, 32, 1, "L2 Tile count", """
+        DrawConfigInt(ref NumTiles[1], 1, 32, 1, Loc.T("L2 Tile count"), """
             Number of tiles per axis for second-level subdivision. Has to be power-of-2. [Limit: 1 <= value <= 32]
             Affects only nav volume.
             """);
-        DrawConfigInt(ref NumTiles[2], 1, 32, 1, "L3 Voxel count", """
+        DrawConfigInt(ref NumTiles[2], 1, 32, 1, Loc.T("L3 Voxel count"), """
             Number of leaf voxels per axis per tile. Has to be power-of-2. [Limit: 1 <= value <= 32]
             Affects only nav volume.
             """);
 
-        ImGui.Checkbox("Generate climb-down links", ref GenerateEdgeClimbLinks);
-        ImGui.Checkbox("Generate jump-down links", ref GenerateEdgeJumpLinks);
-        DrawConfigFloat(ref GroundTolerance, 0, 50, 0.1f, "Ground tolerance", "Undocumented");
-        DrawConfigFloat(ref ClimbDownDistance, 0, 100, 0.1f, "Climb down distance", """
+        ImGui.Checkbox(Loc.T("Generate climb-down links"), ref GenerateEdgeClimbLinks);
+        ImGui.Checkbox(Loc.T("Generate jump-down links"), ref GenerateEdgeJumpLinks);
+        DrawConfigFloat(ref GroundTolerance, 0, 50, 0.1f, Loc.T("Ground tolerance"), Loc.T("Undocumented"));
+        DrawConfigFloat(ref ClimbDownDistance, 0, 100, 0.1f, Loc.T("Climb down distance"), """
             Horizontal distance for edge climb samples.
             """);
-        DrawConfigFloat(ref ClimbDownMaxHeight, 0, 100, 0.5f, "Climb down max height", "Undocumented");
-        DrawConfigFloat(ref ClimbDownMinHeight, 0, 100, 0.5f, "Climb down min height", "Undocumented");
-        DrawConfigFloat(ref EdgeJumpEndDistance, 0, 100, 0.5f, "Edge jump end distance", "Undocumented");
-        DrawConfigFloat(ref EdgeJumpHeight, 0, 10, 0.1f, "Edge jump height", "Undocumented");
-        DrawConfigFloat(ref EdgeJumpMaxDrop, 0, 100, 0.1f, "Edge jump max drop", "Undocumented");
-        DrawConfigFloat(ref EdgeJumpMinDrop, 0, 100, 0.1f, "Edge jump min drop", "Undocumented");
+        DrawConfigFloat(ref ClimbDownMaxHeight, 0, 100, 0.5f, Loc.T("Climb down max height"), Loc.T("Undocumented"));
+        DrawConfigFloat(ref ClimbDownMinHeight, 0, 100, 0.5f, Loc.T("Climb down min height"), Loc.T("Undocumented"));
+        DrawConfigFloat(ref EdgeJumpEndDistance, 0, 100, 0.5f, Loc.T("Edge jump end distance"), Loc.T("Undocumented"));
+        DrawConfigFloat(ref EdgeJumpHeight, 0, 10, 0.1f, Loc.T("Edge jump height"), Loc.T("Undocumented"));
+        DrawConfigFloat(ref EdgeJumpMaxDrop, 0, 100, 0.1f, Loc.T("Edge jump max drop"), Loc.T("Undocumented"));
+        DrawConfigFloat(ref EdgeJumpMinDrop, 0, 100, 0.1f, Loc.T("Edge jump min drop"), Loc.T("Undocumented"));
     }
 
     private void DrawConfigFloat(ref float value, float min, float max, float increment, string label, string help)
@@ -278,7 +278,7 @@ public class NavmeshSettings
             ImGuiComponents.HelpMarker(help);
             return;
         }
-        DrawConfigFilteringEnum(ref value, Filter.LowHangingObstacles, "Low-hanging obstacles", """
+        DrawConfigFilteringEnum(ref value, Filter.LowHangingObstacles, Loc.T("Low-hanging obstacles"), """
             Marks non-walkable spans as walkable if their maximum is within #walkableClimb of the span below them.
 
             This removes small obstacles and rasterization artifacts that the agent would be able to walk over
@@ -286,7 +286,7 @@ public class NavmeshSettings
 
             Obstacle spans are marked walkable if: obstacleSpan.smax - walkableSpan.smax < walkableClimb
             """);
-        DrawConfigFilteringEnum(ref value, Filter.LedgeSpans, "Ledge spans", """
+        DrawConfigFilteringEnum(ref value, Filter.LedgeSpans, Loc.T("Ledge spans"), """
             Marks spans that are ledges as not-walkable.
 
             A ledge is a span with one or more neighbors whose maximum is further away than #walkableClimb
@@ -296,7 +296,7 @@ public class NavmeshSettings
 
             A span is a ledge if: abs(currentSpan.smax - neighborSpan.smax) > walkableClimb
             """);
-        DrawConfigFilteringEnum(ref value, Filter.WalkableLowHeightSpans, "Walkable low-height spans", """
+        DrawConfigFilteringEnum(ref value, Filter.WalkableLowHeightSpans, Loc.T("Walkable low-height spans"), """
             Marks walkable spans as not walkable if the clearance above the span is less than the specified #walkableHeight.
 
             For this filter, the clearance above the span is the distance from the span's 
@@ -304,7 +304,7 @@ public class NavmeshSettings
             If there is no higher span in the column, the clearance is computed as the
             distance from the top of the span to the maximum heightfield height.
             """);
-        DrawConfigFilteringEnum(ref value, Filter.Interiors, "Interiors", """
+        DrawConfigFilteringEnum(ref value, Filter.Interiors, Loc.T("Interiors"), """
             Marks spans inside manifold geometry (or below non-manifold) as non-walkable.
             """);
     }
