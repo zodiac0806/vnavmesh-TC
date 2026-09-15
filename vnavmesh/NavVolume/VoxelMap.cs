@@ -95,10 +95,13 @@ public class VoxelMap
         }
         public (Vector3 min, Vector3 max) CalculateSubdivisionBounds((int x, int y, int z) v) => CalculateSubdivisionBounds(v.x, v.y, v.z);
 
-        public (ulong index, bool empty) FindLeafVoxel(Vector3 p, bool checkBounds = true)
+        public (ulong index, bool empty) FindLeafVoxel(Vector3 p)
         {
             var v = WorldToVoxel(p);
-            if (checkBounds && !LevelDesc.InBounds(v))
+            // always validate bounds, even for the recursive subdivision call below: floating-point rounding at
+            // tile boundaries can push the recomputed local voxel coordinates just out of range here even though
+            // the parent's own voxel lookup picked this tile, which would otherwise index past the end of Contents
+            if (!LevelDesc.InBounds(v))
                 return (InvalidVoxel, false); // out of bounds; consider everything outside to be occupied
 
             var idx = LevelDesc.VoxelToIndex(v);
@@ -114,7 +117,7 @@ public class VoxelMap
             }
             else
             {
-                var sub = Subdivision[data].FindLeafVoxel(p, false); // guaranteed to be in bounds
+                var sub = Subdivision[data].FindLeafVoxel(p);
                 return (EncodeIndex(idx, sub.index), sub.empty);
             }
         }
