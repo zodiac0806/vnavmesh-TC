@@ -1,0 +1,23 @@
+[
+  {
+    "Author": "veyn (TC fork: zodiac0806)",
+    "Name": "vnavmesh",
+    "InternalName": "vnavmesh",
+    "AssemblyVersion": "7.20.0.48",
+    "Description": "自動在世界中移動角色的輔助工具，能巧妙地避開各種障礙物。",
+    "ApplicableVersion": "any",
+    "RepoUrl": "https://github.com/zodiac0806/vnavmesh-TC",
+    "Tags": ["navigation", "movement", "pathfinding"],
+    "CategoryTags": ["Utility"],
+    "DalamudApiLevel": 13,
+    "LoadRequiredState": 0,
+    "LoadSync": false,
+    "CanUnloadAsync": false,
+    "LoadPriority": 0,
+    "Punchline": "自動移動吧！",
+    "AcceptsFeedback": true,
+    "DownloadLinkInstall": "https://github.com/zodiac0806/vnavmesh-TC/releases/download/v7.20.0.48/vnavmesh.zip",
+    "DownloadLinkUpdate": "https://github.com/zodiac0806/vnavmesh-TC/releases/download/v7.20.0.48/vnavmesh.zip",
+    "Changelog": "重複下達相同目的地的 MoveTo 時不再取消進行中的尋路(修正飛行尋路卡住)（2026-09-30）"
+  }
+]

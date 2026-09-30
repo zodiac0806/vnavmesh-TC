@@ -15,6 +15,7 @@ public class AsyncMoveRequest : IDisposable
     // 否則自訂連結的「等客戶端把路徑播完」邏輯永遠不會生效。
     private Task<List<Waypoint>>? _pendingTask;
     private CancellationTokenSource? _pendingCts;
+    private Vector3 _pendingDest;
     private bool _pendingFly;
     private float _pendingDestRange;
 
@@ -160,6 +161,28 @@ public class AsyncMoveRequest : IDisposable
     {
         if (_pendingTask != null)
         {
+            // 呼叫端常見模式是「每個 tick 都用同一目的地重下 MoveTo,直到抵達為止」
+            // (例如自動打獵記/自動任務腳本的飛行迴圈)。目的地、fly、range 跟正在跑的
+            // 這一筆,或已經排隊等接手的下一筆完全相同時,視為同一個請求、原地不動——
+            // 不取消、不重新排隊。
+            //
+            // 沒有這個判斷的話:單次尋路耗時(尤其飛行體素尋路,可能十幾秒)只要比呼叫端
+            // 的重下間隔(通常 ~1s)長,每一筆算完都會被下一個「內容其實一樣」的請求判定
+            // 成 superseded 而整筆丟棄,永遠不會有一次被真的拿去呼叫 _follow.Move()——
+            // 角色卡在原地、log 只會看到不斷重複的 Superseding in-progress pathfind。
+            if (dest == _pendingDest && fly == _pendingFly && range == _pendingDestRange)
+            {
+                Service.Log.Debug($"Ignoring duplicate {(fly ? "fly" : "move")}-to {dest:f3}: identical to in-progress pathfind, not superseding");
+                return true;
+            }
+
+            var queued = Volatile.Read(ref _queued);
+            if (queued != null && queued.Dest == dest && queued.Fly == fly && queued.Range == range)
+            {
+                Service.Log.Debug($"Ignoring duplicate {(fly ? "fly" : "move")}-to {dest:f3}: identical to already-queued request, not superseding");
+                return true;
+            }
+
             // 🔴 刻意**不**在這裡直接改寫 _pendingTask,也刻意不採用上游下游那種
             //    「放生舊任務、當場接上新的」的寫法。MoveTo 會從 IPC 端點進來,實作跑在**呼叫端的執行緒**上;Update() 跑在框架執行緒。目前碼裡的不變式是
             //    「_pendingTask 非 null 時只有框架執行緒會寫它」——在這裡改寫會打破它。
@@ -201,6 +224,7 @@ public class AsyncMoveRequest : IDisposable
         Service.Log.Info($"Queueing {(fly ? "fly" : "move")}-to {dest:f3}{toleranceStr}");
         _pendingCts = new CancellationTokenSource();
         _pendingTask = _manager.QueryPath(CurrentPlayerPosition(), dest, fly, range, _pendingCts.Token);
+        _pendingDest = dest;
         _pendingFly = fly;
         _pendingDestRange = range;
         return true;

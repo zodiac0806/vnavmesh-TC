@@ -5,7 +5,6 @@
   "Description": "自動在世界中移動角色的輔助工具，能巧妙地避開各種障礙物。",
   "InternalName": "vnavmesh",
   "ApplicableVersion": "any",
-  "RepoUrl": "https://github.com/ffxiv-tc-port/vnavmesh",
-  "IconUrl": "https://raw.githubusercontent.com/ffxiv-tc-port/DalamudPluginsTC/main/icons/vnavmesh.png",
+  "RepoUrl": "https://github.com/zodiac0806/vnavmesh-TC",
   "DalamudApiLevel": 13
 }
